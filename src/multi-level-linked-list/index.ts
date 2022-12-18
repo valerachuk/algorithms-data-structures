@@ -1,3 +1,6 @@
+import { assertIsDefined } from "../common/assertions";
+import { getNodeAt } from "./utils";
+
 export interface LinkedListNode<TValue> {
   value: TValue;
   next: LinkedListNode<TValue> | null;
@@ -9,7 +12,7 @@ export class MultiLevelLinkedList<TValue> {
 
   public constructor() {}
 
-  public static fromNode<TValue>(
+  public static fromRootNode<TValue>(
     root: LinkedListNode<TValue>
   ): MultiLevelLinkedList<TValue> {
     const instance = new MultiLevelLinkedList<TValue>();
@@ -68,5 +71,26 @@ export class MultiLevelLinkedList<TValue> {
     };
 
     return getCountOnLayer(0, this._root);
+  }
+
+  public get(path: Array<number>): TValue {
+    let currentNode = this._root;
+
+    for (let i = 0; i < path.length; i++) {
+      const elementIndex = path[i];
+      if (currentNode === null) {
+        throw new RangeError(`Got null at index: ${elementIndex}`);
+      }
+
+      currentNode = getNodeAt(currentNode, elementIndex);
+
+      if (i === path.length - 1) {
+        return currentNode.value;
+      }
+
+      currentNode = currentNode.child;
+    }
+
+    throw new Error("Path must be non-empty");
   }
 }

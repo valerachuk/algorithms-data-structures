@@ -45,7 +45,7 @@ describe("Multi level linked list", () => {
     assertIsDefined(ll_15);
     getNodeAt(ll_15, 2).child = ll_152;
 
-    testMultiLevelLinkedList1 = MultiLevelLinkedList.fromNode(ll_);
+    testMultiLevelLinkedList1 = MultiLevelLinkedList.fromRootNode(ll_);
   });
 
   test("count", () => {
@@ -94,4 +94,36 @@ describe("Multi level linked list", () => {
       expect(count).toBe(expectedCount);
     }
   );
+
+  test.each([
+    {
+      path: [1, 5, 2, 1],
+      value: 22,
+    },
+    {
+      path: [0],
+      value: 1,
+    },
+    {
+      path: [1],
+      value: 2,
+    },
+    {
+      path: [0, 0, 0],
+      value: 10,
+    },
+    {
+      path: [0, 0, 1, 2],
+      value: 20,
+    },
+  ])("get($path) should be $value", ({ path, value: expectedValue }) => {
+    // Arrange
+    assertIsDefined(testMultiLevelLinkedList1);
+
+    // Act
+    const count = testMultiLevelLinkedList1.get(path);
+
+    // Assert
+    expect(count).toBe(expectedValue);
+  });
 });

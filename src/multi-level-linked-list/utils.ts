@@ -1,15 +1,12 @@
 import { LinkedListNode } from ".";
-import { assertIsDefined } from "../common/assertions";
 
 export const arrayToFlatLinkedList = <TValue>(
   ...arr: ReadonlyArray<TValue>
 ): LinkedListNode<TValue> | null => {
-  const arrCopy = arr.concat();
-
   let currentNode: LinkedListNode<TValue> | null = null;
-  while (arrCopy.length !== 0) {
-    let value = arrCopy.pop();
-    assertIsDefined(value);
+
+  for (let i = arr.length - 1; i >= 0; i--) {
+    let value = arr[i];
 
     const newNode: LinkedListNode<TValue> = {
       value,
