@@ -1,4 +1,3 @@
-import { assertIsDefined } from "../common/assertions";
 import { getNodeAt } from "./utils";
 
 export interface LinkedListNode<TValue> {
@@ -92,5 +91,41 @@ export class MultiLevelLinkedList<TValue> {
     }
 
     throw new Error("Path must be non-empty");
+  }
+
+  /**
+   * Warning: draft, non-efficient solution for testing
+   */
+  public toFlatArray(): Array<TValue> {
+    const flatLayers: Array<Array<TValue>> = [];
+
+    const flattenLayer = (
+      layerRoot: LinkedListNode<TValue> | null,
+      layerIndex: number
+    ): void => {
+      const childrenRoots: Array<LinkedListNode<TValue>> = [];
+
+      const valuesByLayer = (flatLayers[layerIndex] =
+        flatLayers[layerIndex] ?? []);
+
+      let currentNode = layerRoot;
+      while (currentNode !== null) {
+        const { child } = currentNode;
+        if (child !== null) {
+          childrenRoots.push(child);
+        }
+
+        valuesByLayer.push(currentNode.value);
+
+        currentNode = currentNode.next;
+      }
+
+      childrenRoots.forEach((layerRoot) =>
+        flattenLayer(layerRoot, layerIndex + 1)
+      );
+    };
+
+    flattenLayer(this._root, 0);
+    return flatLayers.flat();
   }
 }

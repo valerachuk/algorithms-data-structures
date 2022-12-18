@@ -126,4 +126,19 @@ describe("Multi level linked list", () => {
     // Assert
     expect(count).toBe(expectedValue);
   });
+
+  test("toFlatArray", () => {
+    // Arrange
+    assertIsDefined(testMultiLevelLinkedList1);
+    const expectedFlatten = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22,
+    ];
+
+    // Act
+    const flat = testMultiLevelLinkedList1.toFlatArray();
+
+    // Assert
+    expect(flat).toEqual(expectedFlatten);
+  });
 });
