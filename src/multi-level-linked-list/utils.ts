@@ -29,18 +29,15 @@ export const getNodeAt = <TValue>(
   root: LinkedListNode<TValue>,
   index: number
 ): LinkedListNode<TValue> => {
-  let currentNode: typeof root | null = root;
+  let currentNode = root;
 
   for (let i = 0; i < index; i++) {
-    if (currentNode === null) {
-      throw new RangeError(`Got null at index: ${i}`);
+    const { next } = currentNode;
+    if (next === null) {
+      throw new Error(`Next is null at index: ${i}`);
     }
 
-    currentNode = currentNode.next;
-  }
-
-  if (currentNode === null) {
-    throw new RangeError(`Got null at index: ${index}`);
+    currentNode = next;
   }
 
   return currentNode;
