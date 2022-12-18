@@ -29,7 +29,7 @@ export const arrayToFlatLinkedList = <TValue>(
 export const getNodeAt = <TValue>(
   root: LinkedListNode<TValue>,
   index: number
-) => {
+): LinkedListNode<TValue> => {
   let currentNode: typeof root | null = root;
 
   for (let i = 0; i < index; i++) {
@@ -38,6 +38,10 @@ export const getNodeAt = <TValue>(
     }
 
     currentNode = currentNode.next;
+  }
+
+  if (currentNode === null) {
+    throw new RangeError(`Got null at index: ${index}`);
   }
 
   return currentNode;

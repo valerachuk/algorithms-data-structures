@@ -18,6 +18,10 @@ export class MultiLevelLinkedList<TValue> {
     return instance;
   }
 
+  public getRoot(): LinkedListNode<TValue> | null {
+    return this._root;
+  }
+
   public count(): number {
     const getCountOnLayer = (
       layerRoot: LinkedListNode<TValue> | null
