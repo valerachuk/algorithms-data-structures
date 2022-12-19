@@ -50,8 +50,8 @@ export class MultiLevelLinkedList<TValue> {
 
   public countOnLayer(layerIndex: number): number {
     const getCountOnLayer = (
-      currentIndex: number,
-      layerRoot: LinkedListNode<TValue> | null
+      layerRoot: LinkedListNode<TValue> | null,
+      currentIndex: number
     ) => {
       let currentNode = layerRoot;
       let currentCount = 0;
@@ -62,7 +62,7 @@ export class MultiLevelLinkedList<TValue> {
         }
 
         if (currentNode.child !== null && currentIndex < layerIndex) {
-          currentCount += getCountOnLayer(currentIndex + 1, currentNode.child);
+          currentCount += getCountOnLayer(currentNode.child, currentIndex + 1);
         }
 
         currentNode = currentNode.next;
@@ -71,7 +71,7 @@ export class MultiLevelLinkedList<TValue> {
       return currentCount;
     };
 
-    return getCountOnLayer(0, this._root);
+    return getCountOnLayer(this._root, 0);
   }
 
   public getValue(path: MultiLevelLinkedListPath): TValue {
@@ -125,6 +125,34 @@ export class MultiLevelLinkedList<TValue> {
 
     newNode.next = leftSibling.next;
     leftSibling.next = newNode;
+  }
+
+  public dropLayer(layerIndex: number): void {
+    if (layerIndex === 0) {
+      this._root = null;
+      return;
+    }
+
+    const dropLayer = (
+      layerRoot: LinkedListNode<TValue> | null,
+      currentIndex: number
+    ) => {
+      let currentNode = layerRoot;
+
+      while (currentNode !== null) {
+        if (currentIndex === layerIndex - 1) {
+          currentNode.child = null;
+        }
+
+        if (currentNode.child !== null) {
+          dropLayer(currentNode.child, currentIndex + 1);
+        }
+
+        currentNode = currentNode.next;
+      }
+    };
+
+    return dropLayer(this._root, 0);
   }
 
   /**

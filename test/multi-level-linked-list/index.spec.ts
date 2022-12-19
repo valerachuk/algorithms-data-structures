@@ -87,19 +87,16 @@ describe("Multi level linked list", () => {
       layer: 4,
       count: 0,
     },
-  ])(
-    "countOnLayer($layer) should be $count",
-    ({ layer, count: expectedCount }) => {
-      // Arrange
-      assertIsDefined(testMultiLevelLinkedList1);
+  ])("countOnLayer($layer) === $count", ({ layer, count: expectedCount }) => {
+    // Arrange
+    assertIsDefined(testMultiLevelLinkedList1);
 
-      // Act
-      const count = testMultiLevelLinkedList1.countOnLayer(layer);
+    // Act
+    const count = testMultiLevelLinkedList1.countOnLayer(layer);
 
-      // Assert
-      expect(count).toBe(expectedCount);
-    }
-  );
+    // Assert
+    expect(count).toBe(expectedCount);
+  });
 
   test.each([
     {
@@ -122,7 +119,7 @@ describe("Multi level linked list", () => {
       path: [0, 0, 1, 2],
       value: 20,
     },
-  ])("getValue($path) should be $value", ({ path, value: expectedValue }) => {
+  ])("getValue($path) === $value", ({ path, value: expectedValue }) => {
     // Arrange
     assertIsDefined(testMultiLevelLinkedList1);
 
@@ -232,6 +229,55 @@ describe("Multi level linked list", () => {
 
     // Act
     testMultiLevelLinkedList1.insert(value, path);
+
+    // Assert
+    const flatArray = testMultiLevelLinkedList1.toFlatArray();
+    expect(flatArray).toEqual(expectedFlatArray);
+  });
+
+  test.each([
+    {
+      layer: 0,
+      expectedFlatArray: [],
+    },
+    {
+      layer: 1,
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(2);
+        return arr;
+      })(),
+    },
+    {
+      layer: 2,
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(9);
+        return arr;
+      })(),
+    },
+    {
+      layer: 3,
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(17);
+        return arr;
+      })(),
+    },
+    {
+      layer: 4,
+      expectedFlatArray: getTestMultiLevelLinkedList1Flat(),
+    },
+    {
+      layer: 5,
+      expectedFlatArray: getTestMultiLevelLinkedList1Flat(),
+    },
+  ])("dropLayer($layer)", ({ layer, expectedFlatArray }) => {
+    // Arrange
+    assertIsDefined(testMultiLevelLinkedList1);
+
+    // Act
+    testMultiLevelLinkedList1.dropLayer(layer);
 
     // Assert
     const flatArray = testMultiLevelLinkedList1.toFlatArray();
