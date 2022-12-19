@@ -195,6 +195,10 @@ export class MultiLevelLinkedList<TValue> {
     return dropLayer(this._root, 0);
   }
 
+  public clear(): void {
+    this._root = null;
+  }
+
   /**
    * Warning: draft, non-efficient solution for testing
    */
