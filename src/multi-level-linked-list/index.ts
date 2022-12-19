@@ -127,6 +127,46 @@ export class MultiLevelLinkedList<TValue> {
     leftSibling.next = newNode;
   }
 
+  public dropElement(path: MultiLevelLinkedListPath): void {
+    if (path.length === 0) {
+      throw new Error("path must be non-empty");
+    }
+
+    // Handle root edge case
+    if (path.length === 1 && path[0] === 0) {
+      this._root = this._root?.next ?? null;
+      return;
+    }
+
+    let leftSibling: LinkedListNode<TValue>;
+    const lastLevelIndex = path.at(-1)!;
+
+    if (path.length === 1) {
+      if (this._root === null) {
+        throw new Error(`Root must be not null`);
+      }
+      leftSibling = getNodeAt(this._root, lastLevelIndex - 1);
+    } else {
+      const lastLayerParentNode = this._getLayerParent(path);
+
+      // Handle parent layer edge case
+      if (lastLevelIndex === 0) {
+        lastLayerParentNode.child = lastLayerParentNode.child?.next ?? null;
+        return;
+      }
+
+      if (lastLayerParentNode.child === null) {
+        throw new Error(
+          `The requested element at layer ${path.length - 1} doesn't exist`
+        );
+      }
+
+      leftSibling = getNodeAt(lastLayerParentNode.child, lastLevelIndex - 1);
+    }
+
+    leftSibling.next = leftSibling.next?.next ?? null;
+  }
+
   public dropLayer(layerIndex: number): void {
     if (layerIndex === 0) {
       this._root = null;

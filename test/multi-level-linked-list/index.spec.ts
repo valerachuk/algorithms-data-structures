@@ -237,6 +237,81 @@ describe("Multi level linked list", () => {
 
   test.each([
     {
+      path: [0],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(17, 3);
+        arr.splice(9, 2);
+        arr.splice(2, 1);
+        arr.splice(0, 1);
+        return arr;
+      })(),
+    },
+    {
+      path: [1],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(20, 2);
+        arr.splice(11, 6);
+        arr.splice(3, 6);
+        arr.splice(1, 1);
+        return arr;
+      })(),
+    },
+    {
+      path: [2],
+      expectedFlatArray: getTestMultiLevelLinkedList1Flat(),
+    },
+    {
+      path: [1, 0],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(3, 1);
+        return arr;
+      })(),
+    },
+    {
+      path: [1, 0, 0],
+      expectedFlatArray: getTestMultiLevelLinkedList1Flat(),
+    },
+    {
+      path: [1, 5, 1],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(15, 1);
+        return arr;
+      })(),
+    },
+    {
+      path: [1, 5, 0],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(14, 1);
+        return arr;
+      })(),
+    },
+    {
+      path: [0, 0, 0],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(9, 1);
+        return arr;
+      })(),
+    },
+  ])("dropElement($path)", ({ path, expectedFlatArray }) => {
+    // Arrange
+    assertIsDefined(testMultiLevelLinkedList1);
+
+    // Act
+    testMultiLevelLinkedList1.dropElement(path);
+
+    // Assert
+    const flatArray = testMultiLevelLinkedList1.toFlatArray();
+    expect(flatArray).toEqual(expectedFlatArray);
+  });
+
+  test.each([
+    {
       layer: 0,
       expectedFlatArray: [],
     },
