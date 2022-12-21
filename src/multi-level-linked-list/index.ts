@@ -105,7 +105,7 @@ export class MultiLevelLinkedList<TValue> {
       }
       leftSibling = getNodeAt(this._root, lastLevelIndex - 1);
     } else {
-      const lastLayerParentNode = this._getLayerParent(path);
+      const lastLayerParentNode = this._getNode(path.slice(0, -1));
 
       // Handle parent layer edge case
       if (lastLevelIndex === 0) {
@@ -147,7 +147,7 @@ export class MultiLevelLinkedList<TValue> {
       }
       leftSibling = getNodeAt(this._root, lastLevelIndex - 1);
     } else {
-      const lastLayerParentNode = this._getLayerParent(path);
+      const lastLayerParentNode = this._getNode(path.slice(0, -1));
 
       // Handle parent layer edge case
       if (lastLevelIndex === 0) {
@@ -194,6 +194,8 @@ export class MultiLevelLinkedList<TValue> {
 
     return dropLayer(this._root, 0);
   }
+
+  public dropChildBranch(path: MultiLevelLinkedListPath): void {}
 
   public clear(): void {
     this._root = null;
@@ -255,35 +257,5 @@ export class MultiLevelLinkedList<TValue> {
     }
 
     return getNodeAt(currentNode, path.at(-1)!);
-  }
-
-  private _getLayerParent(
-    path: MultiLevelLinkedListPath
-  ): LinkedListNode<TValue> {
-    if (path.length < 2) {
-      throw new RangeError(
-        "The path has length < 2, root reference cannot be a parent node"
-      );
-    }
-
-    if (this._root === null) {
-      throw new Error(`Root must be not null`);
-    }
-    let currentNode: LinkedListNode<TValue> = this._root;
-
-    for (let i = 0; i < path.length - 2; i++) {
-      const elementIndex = path[i];
-
-      currentNode = getNodeAt(currentNode, elementIndex);
-
-      const { child } = currentNode;
-      if (child === null) {
-        throw new Error(`Child is null at index: ${elementIndex}, layer: ${i}`);
-      }
-
-      currentNode = child;
-    }
-
-    return getNodeAt(currentNode, path.at(-2)!);
   }
 }
