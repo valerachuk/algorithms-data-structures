@@ -195,7 +195,19 @@ export class MultiLevelLinkedList<TValue> {
     return dropLayer(this._root, 0);
   }
 
-  public dropChildBranch(path: MultiLevelLinkedListPath): void {}
+  /**
+   * Sets child reference to null of the specified node
+   * @param path path of the parent node to drop the child of
+   */
+  public dropBranch(path: MultiLevelLinkedListPath): void {
+    if (path.length === 0) {
+      this._root = null;
+      return;
+    }
+
+    const parentNode = this._getNode(path);
+    parentNode.child = null;
+  }
 
   public clear(): void {
     this._root = null;

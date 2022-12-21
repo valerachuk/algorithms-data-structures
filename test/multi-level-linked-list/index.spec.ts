@@ -352,6 +352,54 @@ describe("Multi level linked list", () => {
     expect(flatArray).toEqual(expectedFlatArray);
   });
 
+  test.each([
+    {
+      path: [],
+      expectedFlatArray: [],
+    },
+    {
+      path: [0],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(17, 3);
+        arr.splice(9, 2);
+        arr.splice(2, 1);
+        return arr;
+      })(),
+    },
+    {
+      path: [1],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(20, 2);
+        arr.splice(11, 6);
+        arr.splice(3, 6);
+        return arr;
+      })(),
+    },
+    {
+      path: [1, 5, 1],
+      expectedFlatArray: getTestMultiLevelLinkedList1Flat(),
+    },
+    {
+      path: [0, 0, 1],
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(17, 3);
+        return arr;
+      })(),
+    },
+  ])("dropBranch($path)", ({ path, expectedFlatArray }) => {
+    // Arrange
+
+    // Act
+    testMultiLevelLinkedList1.dropBranch(path);
+
+    // Assert
+    const flatArray = testMultiLevelLinkedList1.toFlatArray();
+    expect(flatArray).toEqual(expectedFlatArray);
+  });
+
   test("clear()", () => {
     // Arrange
     const expectedFlatArray: unknown = [];
