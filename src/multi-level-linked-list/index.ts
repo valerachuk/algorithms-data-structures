@@ -79,52 +79,16 @@ export class MultiLevelLinkedList<TValue> {
   }
 
   public insert(value: TValue, path: MultiLevelLinkedListPath): void {
-    if (path.length === 0) {
-      throw new Error("path must be non-empty");
-    }
+    this._insertNode({ value, child: null }, path);
+  }
 
-    const newNode: LinkedListNode<TValue> = {
-      value,
-      next: null,
-      child: null,
-    };
-
-    // Handle root edge case
-    if (path.length === 1 && path[0] === 0) {
-      newNode.next = this._root;
-      this._root = newNode;
-      return;
-    }
-
-    let leftSibling: LinkedListNode<TValue>;
-    const lastLevelIndex = path.at(-1)!;
-
-    if (path.length === 1) {
-      if (this._root === null) {
-        throw new Error(`Root must be not null`);
-      }
-      leftSibling = getNodeAt(this._root, lastLevelIndex - 1);
-    } else {
-      const lastLayerParentNode = this._getNode(path.slice(0, -1));
-
-      // Handle parent layer edge case
-      if (lastLevelIndex === 0) {
-        newNode.next = lastLayerParentNode.child;
-        lastLayerParentNode.child = newNode;
-        return;
-      }
-
-      if (lastLayerParentNode.child === null) {
-        throw new Error(
-          `The requested element at layer ${path.length - 1} doesn't exist`
-        );
-      }
-
-      leftSibling = getNodeAt(lastLayerParentNode.child, lastLevelIndex - 1);
-    }
-
-    newNode.next = leftSibling.next;
-    leftSibling.next = newNode;
+  public moveElement(
+    fromPath: MultiLevelLinkedListPath,
+    toPath: MultiLevelLinkedListPath
+  ): void {
+    const { value, child } = this._getNode(fromPath);
+    this._insertNode({ value, child }, toPath);
+    this.dropElement(fromPath);
   }
 
   public dropElement(path: MultiLevelLinkedListPath): void {
@@ -306,5 +270,56 @@ export class MultiLevelLinkedList<TValue> {
     }
 
     return getNodeAt(currentNode, path.at(-1)!);
+  }
+
+  private _insertNode(
+    node: Omit<LinkedListNode<TValue>, "next">,
+    path: MultiLevelLinkedListPath
+  ): void {
+    if (path.length === 0) {
+      throw new Error("path must be non-empty");
+    }
+
+    const newNode: LinkedListNode<TValue> = {
+      ...node,
+      next: null,
+    };
+
+    // Handle root edge case
+    if (path.length === 1 && path[0] === 0) {
+      newNode.next = this._root;
+      this._root = newNode;
+      return;
+    }
+
+    let leftSibling: LinkedListNode<TValue>;
+    const lastLevelIndex = path.at(-1)!;
+
+    if (path.length === 1) {
+      if (this._root === null) {
+        throw new Error(`Root must be not null`);
+      }
+      leftSibling = getNodeAt(this._root, lastLevelIndex - 1);
+    } else {
+      const lastLayerParentNode = this._getNode(path.slice(0, -1));
+
+      // Handle parent layer edge case
+      if (lastLevelIndex === 0) {
+        newNode.next = lastLayerParentNode.child;
+        lastLayerParentNode.child = newNode;
+        return;
+      }
+
+      if (lastLayerParentNode.child === null) {
+        throw new Error(
+          `The requested element at layer ${path.length - 1} doesn't exist`
+        );
+      }
+
+      leftSibling = getNodeAt(lastLayerParentNode.child, lastLevelIndex - 1);
+    }
+
+    newNode.next = leftSibling.next;
+    leftSibling.next = newNode;
   }
 }

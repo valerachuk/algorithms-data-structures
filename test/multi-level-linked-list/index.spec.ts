@@ -231,6 +231,49 @@ describe("Multi level linked list", () => {
   });
 
   test.each([
+    // Transformation:
+    // --------------------------------------------
+    // From:
+    // 1 - 2
+    // |   |
+    // 3   4 - 5 - 6 - 7 - 8 - 9
+    // |       |               |
+    // 10- 11  12- 13- 14      15- 16- 17
+    //     |                           |
+    //     18- 19- 20                  21- 22
+    // --------------------------------------------
+    // To:
+    // 1 - 2
+    // |   |
+    // 3   4 - 6 - 7 - 8 - 9
+    // |                   |
+    // 10- 5 - 11          15- 16- 17
+    //     |   |                   |
+    //     |   18- 19- 20          21- 22
+    //     12- 13- 14
+    {
+      fromPath: [1, 1],
+      toPath: [0, 0, 1],
+      expectedFlatArray: [
+        1, 2, 3, 4, 6, 7, 8, 9, 10, 5, 11, 15, 16, 17, 12, 13, 14, 18, 19, 20,
+        21, 22,
+      ],
+    },
+  ])(
+    "moveElement($fromPath, $toPath)",
+    ({ fromPath, toPath, expectedFlatArray }) => {
+      // Arrange
+
+      // Act
+      testMultiLevelLinkedList1.moveElement(fromPath, toPath);
+
+      // Assert
+      const flatArray = testMultiLevelLinkedList1.toFlatArray();
+      expect(flatArray).toEqual(expectedFlatArray);
+    }
+  );
+
+  test.each([
     {
       path: [0],
       expectedFlatArray: (() => {
