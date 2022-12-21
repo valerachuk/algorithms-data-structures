@@ -400,6 +400,49 @@ describe("Multi level linked list", () => {
     expect(flatArray).toEqual(expectedFlatArray);
   });
 
+  test("clone()", () => {
+    // Arrange
+
+    // Act
+    const cloned = testMultiLevelLinkedList1.clone();
+
+    // Assert
+    testMultiLevelLinkedList1.insert(1, [0]);
+    const clonedFlatArray = cloned.toFlatArray();
+    const flatArray = testMultiLevelLinkedList1.toFlatArray();
+
+    expect(clonedFlatArray).not.toEqual(flatArray);
+  });
+
+  test("clone() should clone empty list", () => {
+    // Arrange
+    const multiLevelLinkedList = new MultiLevelLinkedList();
+
+    // Act
+    const cloned = multiLevelLinkedList.clone();
+
+    // Assert
+    multiLevelLinkedList.insert(1, [0]);
+    const clonedFlatArray = cloned.toFlatArray();
+    const flatArray = multiLevelLinkedList.toFlatArray();
+
+    expect(clonedFlatArray).not.toEqual(flatArray);
+  });
+
+  test("clone() should not shallow clone", () => {
+    // Arrange
+    const expectedFlatArray = testMultiLevelLinkedList1.toFlatArray();
+
+    // Act
+    const cloned = testMultiLevelLinkedList1.clone();
+
+    // Assert
+    const clonedFlatArray = cloned.toFlatArray();
+
+    expect(cloned).not.toBe(testMultiLevelLinkedList1);
+    expect(clonedFlatArray).toEqual(expectedFlatArray);
+  });
+
   test("clear()", () => {
     // Arrange
     const expectedFlatArray: unknown = [];

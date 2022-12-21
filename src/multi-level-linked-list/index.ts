@@ -14,7 +14,7 @@ export class MultiLevelLinkedList<TValue> {
   public constructor() {}
 
   public static fromRootNode<TValue>(
-    root: LinkedListNode<TValue>
+    root: LinkedListNode<TValue> | null
   ): MultiLevelLinkedList<TValue> {
     const instance = new MultiLevelLinkedList<TValue>();
     instance._root = root;
@@ -207,6 +207,43 @@ export class MultiLevelLinkedList<TValue> {
 
     const parentNode = this._getNode(path);
     parentNode.child = null;
+  }
+
+  public clone(): MultiLevelLinkedList<TValue> {
+    const copyNode = (value: TValue): LinkedListNode<TValue> => {
+      return {
+        value,
+        next: null,
+        child: null,
+      };
+    };
+
+    const cloneBranch = (layerRoot: LinkedListNode<TValue> | null) => {
+      let clonedRoot: typeof layerRoot | null = null;
+
+      let currentNode: typeof layerRoot | null = layerRoot;
+      let lastNodeCopy: typeof layerRoot | null = null;
+
+      while (currentNode !== null) {
+        const nodeCopy = copyNode(currentNode.value);
+        nodeCopy.child = cloneBranch(currentNode.child);
+
+        if (lastNodeCopy !== null) {
+          lastNodeCopy.next = nodeCopy;
+        } else {
+          clonedRoot = nodeCopy;
+        }
+
+        lastNodeCopy = nodeCopy;
+        currentNode = currentNode.next;
+      }
+
+      return clonedRoot;
+    };
+
+    const copiedRoot = cloneBranch(this._root);
+
+    return MultiLevelLinkedList.fromRootNode(copiedRoot);
   }
 
   public clear(): void {
