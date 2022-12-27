@@ -13,15 +13,45 @@ export type BenchmarkSuiteDef = {
   options: BenchmarkSuiteOptions;
 };
 
+const WARMUP_RUNS = 100;
+
 export class BenchmarkSuite {
   constructor(private readonly _def: BenchmarkSuiteDef) {}
 
   public run() {}
 
-  private _runBenchmarkCase(benchmarkCase: BenchmarkCaseDef) {
-    this._runBeforeEach();
+  private _runBenchmarkCase(params: {
+    benchmarkCase: BenchmarkCaseDef;
+    numberOfRuns: number;
+  }): Array<number> {
+    const {
+      numberOfRuns,
+      benchmarkCase: { fn, name },
+    } = params;
 
-    this._runAfterEach();
+    const runCase = (): number => {
+      this._runBeforeEach();
+      const tic = performance.now();
+      fn();
+      const toc = performance.now();
+      this._runAfterEach();
+
+      return toc - tic;
+    };
+
+    if (this._def.options.warmUp === true) {
+      for (let i = 0; i < WARMUP_RUNS; i++) {
+        runCase();
+      }
+    }
+
+    const durationsMs: Array<number> = [];
+    for (let i = 0; i < numberOfRuns; i++) {
+      const duration = runCase();
+      durationsMs.push(duration);
+    }
+
+    return durationsMs;
   }
 
   private _runBeforeEach() {

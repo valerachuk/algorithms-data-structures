@@ -8,5 +8,6 @@ export type BenchmarkCaseDef = {
 };
 
 export type BenchmarkSuiteOptions = {
-  numberOfRuns: Array<number>;
+  numberOfRuns?: Array<number>;
+  warmUp?: boolean;
 };
