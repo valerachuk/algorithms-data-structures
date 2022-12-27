@@ -1,7 +1,8 @@
 export function assertIsDefined<TValue>(
-  value: TValue
+  value: TValue,
+  message: string = "value is not defined."
 ): asserts value is NonNullable<TValue> {
   if (value === null || value === undefined) {
-    throw new Error("value is not defined.");
+    throw new Error(message);
   }
 }
