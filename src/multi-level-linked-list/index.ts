@@ -74,6 +74,28 @@ export class MultiLevelLinkedList<TValue> {
     return getCountOnLayer(this._root, 0);
   }
 
+  public has(value: TValue): boolean {
+    const hasItem = (layerRoot: LinkedListNode<TValue> | null): boolean => {
+      let current = layerRoot;
+
+      while (current != null) {
+        if (Object.is(value, current.value)) {
+          return true;
+        }
+
+        if (hasItem(current.child)) {
+          return true;
+        }
+
+        current = current.next;
+      }
+
+      return false;
+    };
+
+    return hasItem(this._root);
+  }
+
   public getValue(path: MultiLevelLinkedListPath): TValue {
     return this._getNode(path).value;
   }

@@ -96,6 +96,21 @@ describe("Multi level linked list", () => {
     expect(count).toBe(expectedCount);
   });
 
+  test.each(
+    [...new Array(50).keys()].map((value) => ({
+      value,
+      expectedHas: value > 0 && value <= 22,
+    }))
+  )("has($value) === $expectedHas", ({ expectedHas, value }) => {
+    // Arrange
+
+    // Act
+    const has = testMultiLevelLinkedList1.has(value);
+
+    // Assert
+    expect(has).toBe(expectedHas);
+  });
+
   test.each([
     {
       path: [1, 5, 2, 1],
