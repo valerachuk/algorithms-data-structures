@@ -8,6 +8,18 @@ export type BenchmarkCaseDef = {
 };
 
 export type BenchmarkSuiteOptions = {
-  numberOfRuns?: Array<number>;
+  numberOfRuns?: number;
+  omitBestAndWorstResult?: boolean;
+  wamUpRuns?: number;
   warmUp?: boolean;
+};
+
+export type BenchmarkReport = Array<BenchmarkReportEntry>;
+export type BenchmarkReportEntry = {
+  name: string;
+  numberOfRuns: number;
+  min: number;
+  max: number;
+  mean: number;
+  std: number;
 };
