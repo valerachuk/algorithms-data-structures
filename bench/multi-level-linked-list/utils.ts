@@ -103,7 +103,7 @@ export const generateRandomMultiLevelLinkedList = (
 export const generateRandomPath = (
   listSize: number
 ): MultiLevelLinkedListPath => {
-  const maxElementsPerLayer = [listSize, 9, 10];
+  const maxElementsPerLayer = [listSize / 100, 9, 10];
 
   const layerCount = randomInt(3) + 1;
 

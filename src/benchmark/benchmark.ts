@@ -1,4 +1,5 @@
 import { generateBenchmarkReportEntry } from "./report-generator";
+import { reportBenchmarkCli } from "./reporter";
 import {
   AfterEachCallback,
   BeforeEachCallback,
@@ -44,15 +45,30 @@ export class BenchmarkSuite {
   public run() {
     const report: BenchmarkReport = [];
 
-    for (const benchmarkCase of this._cases) {
-      const caseDurations = this._runBenchmarkCase(benchmarkCase.fn);
+    for (const { name, fn } of this._cases) {
+      console.log(`Running benchmark case: ${name}`);
+      const tic = performance.now();
+      const caseDurations = this._runBenchmarkCase(fn);
+      const toc = performance.now();
+
+      console.log(
+        `Running benchmark case: ${name} - done in ${(toc - tic) / 1e3} (s)`
+      );
+
+      const durationsWithoutMinMax = this._dropBestAndWorstCase(caseDurations);
+
       const reportEntry = generateBenchmarkReportEntry({
-        caseDurations,
-        name: benchmarkCase.name,
+        caseDurations: durationsWithoutMinMax,
+        name,
       });
 
       report.push(reportEntry);
     }
+
+    reportBenchmarkCli({
+      report,
+      suiteName: this._name,
+    });
   }
 
   private _dropBestAndWorstCase(
