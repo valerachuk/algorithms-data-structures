@@ -48,17 +48,19 @@ export class BenchmarkSuite {
     for (const { name, fn } of this._cases) {
       console.log(`Running benchmark case: ${name}`);
       const tic = performance.now();
-      const caseDurations = this._runBenchmarkCase(fn);
+      let caseDurations = this._runBenchmarkCase(fn);
       const toc = performance.now();
 
       console.log(
         `Running benchmark case: ${name} - done in ${(toc - tic) / 1e3} (s)`
       );
 
-      const durationsWithoutMinMax = this._dropBestAndWorstCase(caseDurations);
+      if (this._options.omitBestAndWorstResult === true) {
+        caseDurations = this._dropBestAndWorstCase(caseDurations);
+      }
 
       const reportEntry = generateBenchmarkReportEntry({
-        caseDurations: durationsWithoutMinMax,
+        caseDurations,
         name,
       });
 
