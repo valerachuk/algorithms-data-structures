@@ -11,15 +11,23 @@ export const reportBenchmarkCli = (params: {
     head: [
       "Name",
       "Number of runs",
-      "Min (ms)",
-      "Max (ms)",
-      "Mean (ms)",
-      "Std (ms)",
+      "Min (ns)",
+      "Max (ns)",
+      "Mean (ns)",
+      "Std (ns)",
     ],
   });
 
   for (const { name, numberOfRuns, min, max, mean, std } of report) {
-    table.push({ [name]: [numberOfRuns, min, max, mean, std] });
+    table.push({
+      [name]: [
+        numberOfRuns,
+        (min * 1000).toFixed(3),
+        (max * 1000).toFixed(3),
+        (mean * 1000).toFixed(3),
+        (std * 1000).toFixed(3),
+      ],
+    });
   }
 
   console.log("\n\n");

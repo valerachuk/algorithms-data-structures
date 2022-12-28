@@ -9,11 +9,11 @@ import {
   generateRandomPath,
 } from "./utils";
 
-const MULTI_LEVEL_LL_SIZE = 100_000;
+const MULTI_LEVEL_LL_SIZE = 1_000_000;
 benchmark(
   `Multi level linked list, size: ${MULTI_LEVEL_LL_SIZE}`,
   {
-    numberOfRuns: 1000 + 2,
+    numberOfRuns: 1000,
     omitBestAndWorstResult: true,
   },
   (suite) => {

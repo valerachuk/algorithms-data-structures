@@ -21,7 +21,7 @@ const benchmarkOptionsDefault = {
   numberOfRuns: 1000,
   warmUp: true,
   wamUpRuns: 50,
-  omitBestAndWorstResult: true,
+  omitBestAndWorstResult: false,
 } satisfies Required<BenchmarkSuiteOptions>;
 
 export class BenchmarkSuite {
