@@ -1,4 +1,4 @@
-import { mean, stdDev } from "../common/math";
+import { max, mean, min, stdDev } from "../common/math";
 import { BenchmarkReportEntry } from "./types";
 
 export const generateBenchmarkReportEntry = (params: {
@@ -7,8 +7,8 @@ export const generateBenchmarkReportEntry = (params: {
 }): BenchmarkReportEntry => {
   const { caseDurations, name } = params;
 
-  const min = Math.min(...caseDurations);
-  const max = Math.max(...caseDurations);
+  const min_ = min(caseDurations);
+  const max_ = max(caseDurations);
 
   const mean_ = mean(caseDurations);
   const std = stdDev(caseDurations);
@@ -16,8 +16,8 @@ export const generateBenchmarkReportEntry = (params: {
   return {
     name,
     numberOfRuns: caseDurations.length,
-    min,
-    max,
+    min: min_,
+    max: max_,
     mean: mean_,
     std,
   };

@@ -1,3 +1,4 @@
+import { max, min } from "../common/math";
 import { generateBenchmarkReportEntry } from "./report-generator";
 import { reportBenchmarkCli } from "./reporter";
 import {
@@ -76,10 +77,10 @@ export class BenchmarkSuite {
   private _dropBestAndWorstCase(
     durations: ReadonlyArray<number>
   ): Array<number> {
-    const min = Math.min(...durations);
-    const max = Math.max(...durations);
+    const min_ = min(durations);
+    const max_ = max(durations);
 
-    return durations.filter((x) => x !== min && x !== max);
+    return durations.filter((x) => x !== min_ && x !== max_);
   }
 
   private _runBenchmarkCase(fn: BenchmarkCallback): Array<number> {

@@ -9,3 +9,27 @@ export const stdDev = (arr: ReadonlyArray<number>) => {
 
   return Math.sqrt(variance);
 };
+
+export const min = (arr: ReadonlyArray<number>) => {
+  let min = arr[0];
+
+  for (const x of arr) {
+    if (x < min) {
+      min = x;
+    }
+  }
+
+  return min;
+};
+
+export const max = (arr: ReadonlyArray<number>) => {
+  let max = arr[0];
+
+  for (const x of arr) {
+    if (x > max) {
+      max = x;
+    }
+  }
+
+  return max;
+};
