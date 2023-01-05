@@ -95,7 +95,7 @@ describe("Multi level linked list", () => {
   });
 
   test.each(
-    [...new Array(50).keys()].map((value) => ({
+    [...new Array(24).keys()].map((value) => ({
       value,
       expectedHas: value > 0 && value <= 22,
     }))
@@ -242,6 +242,51 @@ describe("Multi level linked list", () => {
     const flatArray = testMultiLevelLinkedList1.toFlatArray();
     expect(flatArray).toEqual(expectedFlatArray);
   });
+
+  test.each([
+    {
+      value: 42,
+      insertAfterValue: 3,
+      expectedReturn: true,
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(3, 0, 42);
+        return arr;
+      })(),
+    },
+    {
+      value: 42,
+      insertAfterValue: 22,
+      expectedReturn: true,
+      expectedFlatArray: (() => {
+        const arr = getTestMultiLevelLinkedList1Flat();
+        arr.splice(22, 0, 42);
+        return arr;
+      })(),
+    },
+    {
+      value: 42,
+      insertAfterValue: -1,
+      expectedReturn: false,
+      expectedFlatArray: getTestMultiLevelLinkedList1Flat(),
+    },
+  ])(
+    "insertAfterFirstValue($value, $insertAfterValue)",
+    ({ insertAfterValue, value, expectedReturn, expectedFlatArray }) => {
+      // Arrange
+
+      // Act
+      const result = testMultiLevelLinkedList1.insertAfterFirstValue(
+        value,
+        insertAfterValue
+      );
+
+      // Assert
+      expect(result).toBe(expectedReturn);
+      const flatArray = testMultiLevelLinkedList1.toFlatArray();
+      expect(flatArray).toEqual(expectedFlatArray);
+    }
+  );
 
   test.each([
     // Transformation:

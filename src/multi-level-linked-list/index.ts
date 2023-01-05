@@ -75,25 +75,8 @@ export class MultiLevelLinkedList<TValue> {
   }
 
   public has(value: TValue): boolean {
-    const hasItem = (layerRoot: LinkedListNode<TValue> | null): boolean => {
-      let current = layerRoot;
-
-      while (current != null) {
-        if (Object.is(value, current.value)) {
-          return true;
-        }
-
-        if (hasItem(current.child)) {
-          return true;
-        }
-
-        current = current.next;
-      }
-
-      return false;
-    };
-
-    return hasItem(this._root);
+    const foundNode = this._findNode(value);
+    return foundNode !== null;
   }
 
   public getValue(path: MultiLevelLinkedListPath): TValue {
@@ -102,6 +85,27 @@ export class MultiLevelLinkedList<TValue> {
 
   public insert(value: TValue, path: MultiLevelLinkedListPath): void {
     this._insertNode({ value, child: null }, path);
+  }
+
+  public insertAfterFirstValue(
+    value: TValue,
+    insertAfterValue: TValue
+  ): boolean {
+    const leftSibling = this._findNode(insertAfterValue);
+
+    if (leftSibling === null) {
+      return false;
+    }
+
+    const newNode: LinkedListNode<TValue> = {
+      value,
+      next: leftSibling.next,
+      child: null,
+    };
+
+    leftSibling.next = newNode;
+
+    return true;
   }
 
   public moveElement(
@@ -343,5 +347,30 @@ export class MultiLevelLinkedList<TValue> {
 
     newNode.next = leftSibling.next;
     leftSibling.next = newNode;
+  }
+
+  private _findNode(value: TValue): LinkedListNode<TValue> | null {
+    const findNode = (
+      layerRoot: LinkedListNode<TValue> | null
+    ): LinkedListNode<TValue> | null => {
+      let current = layerRoot;
+
+      while (current != null) {
+        if (Object.is(value, current.value)) {
+          return current;
+        }
+
+        const foundNode = findNode(current.child);
+        if (foundNode !== null) {
+          return foundNode;
+        }
+
+        current = current.next;
+      }
+
+      return null;
+    };
+
+    return findNode(this._root);
   }
 }
