@@ -9,7 +9,7 @@ import {
   generateRandomPath,
 } from "./utils";
 
-const MULTI_LEVEL_LL_SIZE = 1_000_000;
+const MULTI_LEVEL_LL_SIZE = 10_000;
 benchmark(
   `Multi level linked list, size: ${MULTI_LEVEL_LL_SIZE}`,
   {
