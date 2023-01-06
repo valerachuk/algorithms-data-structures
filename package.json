@@ -1,6 +1,7 @@
 {
   "scripts": {
     "benchmark": "ts-node bench/multi-level-linked-list/index.ts",
+    "test:types": "tsc --noEmit",
     "test": "jest",
     "test:multi-level-linked-list": "jest test/multi-level-linked-list"
   },
