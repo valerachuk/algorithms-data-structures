@@ -2,17 +2,26 @@ import { getNodeAt } from "./utils";
 
 export type MultiLevelLinkedListPath = Array<number>;
 
+/**
+ * An interface, describing a node of MLLL.
+ */
 export interface LinkedListNode<TValue> {
   value: TValue;
   next: LinkedListNode<TValue> | null;
   child: LinkedListNode<TValue> | null;
 }
 
+/**
+ * Implementation of multi level linked list (next - MLLL).
+ */
 export class MultiLevelLinkedList<TValue> {
   private _root: LinkedListNode<TValue> | null = null;
 
-  public constructor() {}
-
+  /**
+   * Creates a multi level linked list from the specified node.
+   * @param root the root to crete an instance from.
+   * @returns A new instance of {@link MultiLevelLinkedList<TValue>}.
+   */
   public static fromRootNode<TValue>(
     root: LinkedListNode<TValue> | null
   ): MultiLevelLinkedList<TValue> {
@@ -22,10 +31,10 @@ export class MultiLevelLinkedList<TValue> {
     return instance;
   }
 
-  public getRoot(): LinkedListNode<TValue> | null {
-    return this._root;
-  }
-
+  /**
+   * Returns total count of elements in the MLLL.
+   * @returns total count of elements in the MLLL.
+   */
   public count(): number {
     const getCountOnLayer = (
       layerRoot: LinkedListNode<TValue> | null
@@ -48,6 +57,11 @@ export class MultiLevelLinkedList<TValue> {
     return getCountOnLayer(this._root);
   }
 
+  /**
+   * Returns count of elements on the specified layer.
+   * @param layerIndex layer index to count elements on.
+   * @returns count of elements on the specified layer.
+   */
   public countOnLayer(layerIndex: number): number {
     const getCountOnLayer = (
       layerRoot: LinkedListNode<TValue> | null,
@@ -74,19 +88,40 @@ export class MultiLevelLinkedList<TValue> {
     return getCountOnLayer(this._root, 0);
   }
 
+  /**
+   * Checks whether the MLLL contains specified value.
+   * @param value the value to search.
+   * @returns `true` if the MLLL contains specified value; otherwise, `false`.
+   */
   public has(value: TValue): boolean {
     const foundNode = this._findNode(value);
     return foundNode !== null;
   }
 
+  /**
+   * Returns value by the specified path.
+   * @param path the path to get the value from.
+   * @returns value by the specified path.
+   */
   public getValue(path: MultiLevelLinkedListPath): TValue {
     return this._getNode(path).value;
   }
 
+  /**
+   * Inserts value at the specified path to the MLLL.
+   * @param value the value to insert.
+   * @param path to path to insert at.
+   */
   public insert(value: TValue, path: MultiLevelLinkedListPath): void {
     this._insertNode({ value, child: null }, path);
   }
 
+  /**
+   * Inserts the specified `value` after the first found `insertAfterValue`.
+   * @param value the value to insert.
+   * @param insertAfterValue the value to insert the specified `value` after.
+   * @returns `true` if the `insertAfterValue` has been found; otherwise, `false`.
+   */
   public insertAfterFirstValue(
     value: TValue,
     insertAfterValue: TValue
@@ -108,6 +143,11 @@ export class MultiLevelLinkedList<TValue> {
     return true;
   }
 
+  /**
+   * Moves the element at `fromPath` to `toPath`.
+   * @param fromPath the path to move the element from.
+   * @param toPath the path to move the element to.
+   */
   public moveElement(
     fromPath: MultiLevelLinkedListPath,
     toPath: MultiLevelLinkedListPath
@@ -157,6 +197,10 @@ export class MultiLevelLinkedList<TValue> {
     leftSibling.next = leftSibling.next?.next ?? null;
   }
 
+  /**
+   * Removes layer and deeper layers by the specified index.
+   * @param layerIndex the index of layer to remove.
+   */
   public dropLayer(layerIndex: number): void {
     if (layerIndex === 0) {
       this._root = null;
@@ -182,7 +226,7 @@ export class MultiLevelLinkedList<TValue> {
       }
     };
 
-    return dropLayer(this._root, 0);
+    dropLayer(this._root, 0);
   }
 
   /**
@@ -199,6 +243,10 @@ export class MultiLevelLinkedList<TValue> {
     parentNode.child = null;
   }
 
+  /**
+   * Clones to MLLL.
+   * @returns A new instance of MLLL.
+   */
   public clone(): MultiLevelLinkedList<TValue> {
     const copyNode = (value: TValue): LinkedListNode<TValue> => {
       return {
@@ -236,6 +284,9 @@ export class MultiLevelLinkedList<TValue> {
     return MultiLevelLinkedList.fromRootNode(copiedRoot);
   }
 
+  /**
+   * Removes all elements from the MLLL.
+   */
   public clear(): void {
     this._root = null;
   }
