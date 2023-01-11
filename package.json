@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "benchmark": "ts-node bench/multi-level-linked-list/index.ts",
+    "benchmark:multi-level-linked-list": "ts-node bench/multi-level-linked-list/index.ts",
+    "benchmark:skip-list": "ts-node bench/skip-list/index.ts",
     "test:types": "tsc --noEmit",
     "test": "jest",
-    "test:multi-level-linked-list": "jest test/multi-level-linked-list"
+    "test:multi-level-linked-list": "jest test/multi-level-linked-list",
+    "test:skip-list": "jest test/skip-list"
   },
   "devDependencies": {
     "@types/jest": "^29.2.4",

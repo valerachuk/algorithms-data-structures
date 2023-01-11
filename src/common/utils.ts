@@ -9,3 +9,7 @@ export const fisherYatesShuffle = <T>(arr: Array<T>): void => {
     arr[j] = temp;
   }
 };
+
+export const sortNumericArr = (arr: Array<number>): void => {
+  arr.sort((x, y) => x - y);
+};
