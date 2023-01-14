@@ -3,8 +3,13 @@ import { randomInt } from "../../src/common/utils";
 import { SkipList } from "../../src/skip-list";
 
 const SKIP_LIST_SIZE = 10_000;
+const SKIP_LIST_OPTIONS = {
+  maxLvl: 10,
+  p: 1 / 2,
+};
+
 benchmark(
-  `Skip list, size: ${SKIP_LIST_SIZE}`,
+  `Skip list, size: ${SKIP_LIST_SIZE}, ${JSON.stringify(SKIP_LIST_OPTIONS)}`,
   {
     numberOfRuns: 1000,
     omitBestAndWorstResult: false,
@@ -15,12 +20,9 @@ benchmark(
     let randomNonExistentElement: number = null!;
 
     suite.beforeEach(() => {
-      skipList = new SkipList({
-        maxLvl: 10,
-        p: 1 / 2,
-      });
+      skipList = new SkipList(SKIP_LIST_OPTIONS);
 
-      for (let i = 0; i < SKIP_LIST_SIZE; i++) {
+      for (let i = SKIP_LIST_SIZE - 1; i >= 0; i--) {
         skipList.insert(i);
       }
     });

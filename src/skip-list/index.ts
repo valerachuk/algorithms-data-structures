@@ -1,4 +1,4 @@
-export class SkipListNode {
+class SkipListNode {
   private readonly _value: number;
   private readonly _forward: Array<SkipListNode | null>;
 
