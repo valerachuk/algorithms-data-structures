@@ -2,7 +2,9 @@ import { max, min } from "../common/math";
 import { generateBenchmarkReportEntry } from "./report-generator";
 import { reportBenchmarkCli } from "./reporter";
 import {
+  AfterAllCallback,
   AfterEachCallback,
+  BeforeAllCallback,
   BeforeEachCallback,
   BenchmarkCallback,
   BenchmarkCaseDef,
@@ -11,6 +13,8 @@ import {
 } from "./types";
 
 export type BenchmarkSuiteDef = {
+  beforeAllCallbacks: Array<BeforeAllCallback>;
+  afterAllCallbacks: Array<AfterAllCallback>;
   beforeEachCallbacks: Array<BeforeEachCallback>;
   afterEachCallbacks: Array<AfterEachCallback>;
   cases: Array<BenchmarkCaseDef>;
@@ -26,6 +30,8 @@ const benchmarkOptionsDefault = {
 } satisfies Required<BenchmarkSuiteOptions>;
 
 export class BenchmarkSuite {
+  private readonly _beforeAllCallbacks: Array<BeforeAllCallback>;
+  private readonly _afterAllCallbacks: Array<AfterAllCallback>;
   private readonly _beforeEachCallbacks: Array<BeforeEachCallback>;
   private readonly _afterEachCallbacks: Array<AfterEachCallback>;
   private readonly _cases: Array<BenchmarkCaseDef>;
@@ -33,6 +39,8 @@ export class BenchmarkSuite {
   private readonly _options: Required<BenchmarkSuiteOptions>;
 
   constructor(def: BenchmarkSuiteDef) {
+    this._beforeAllCallbacks = def.beforeAllCallbacks;
+    this._afterAllCallbacks = def.afterAllCallbacks;
     this._beforeEachCallbacks = def.beforeEachCallbacks;
     this._afterEachCallbacks = def.afterEachCallbacks;
     this._cases = def.cases;
@@ -94,6 +102,8 @@ export class BenchmarkSuite {
       return toc - tic;
     };
 
+    this._runBeforeAll();
+
     if (this._options.warmUp === true) {
       for (let i = 0; i < this._options.wamUpRuns; i++) {
         runCase();
@@ -106,7 +116,21 @@ export class BenchmarkSuite {
       durationsMs.push(duration);
     }
 
+    this._runAfterAll();
+
     return durationsMs;
+  }
+
+  private _runBeforeAll() {
+    for (const beforeAllCb of this._beforeAllCallbacks) {
+      beforeAllCb();
+    }
+  }
+
+  private _runAfterAll() {
+    for (const afterAllCb of this._afterAllCallbacks) {
+      afterAllCb();
+    }
   }
 
   private _runBeforeEach() {

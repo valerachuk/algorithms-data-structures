@@ -1,7 +1,9 @@
 import { assertIsDefined } from "../common/assertions";
 import { BenchmarkSuite } from "./benchmark";
 import {
+  AfterAllCallback,
   AfterEachCallback,
+  BeforeAllCallback,
   BeforeEachCallback,
   BenchmarkCallback,
   BenchmarkCaseDef,
@@ -9,24 +11,38 @@ import {
 } from "./types";
 
 export interface IBenchmarkSuiteBuilder {
+  beforeAll(cb: BeforeAllCallback): IBenchmarkSuiteBuilder;
+  afterAll(cb: AfterAllCallback): IBenchmarkSuiteBuilder;
   beforeEach(cb: BeforeEachCallback): IBenchmarkSuiteBuilder;
   afterEach(cb: AfterEachCallback): IBenchmarkSuiteBuilder;
   case(name: string, fn: BenchmarkCallback): IBenchmarkSuiteBuilder;
 }
 
 export class BenchmarkSuiteBuilder implements IBenchmarkSuiteBuilder {
+  private _beforeAllCallbacks: Array<BeforeAllCallback> = [];
+  private _afterAllCallbacks: Array<AfterAllCallback> = [];
   private _beforeEachCallbacks: Array<BeforeEachCallback> = [];
   private _afterEachCallbacks: Array<AfterEachCallback> = [];
   private _cases: Array<BenchmarkCaseDef> = [];
   private _name: string | null = null;
   private _options: BenchmarkSuiteOptions | null = null;
 
-  public beforeEach(cb: BenchmarkCallback): BenchmarkSuiteBuilder {
+  public beforeAll(cb: BeforeAllCallback): BenchmarkSuiteBuilder {
+    this._beforeAllCallbacks.push(cb);
+    return this;
+  }
+
+  public afterAll(cb: AfterAllCallback): BenchmarkSuiteBuilder {
+    this._afterAllCallbacks.push(cb);
+    return this;
+  }
+
+  public beforeEach(cb: BeforeEachCallback): BenchmarkSuiteBuilder {
     this._beforeEachCallbacks.push(cb);
     return this;
   }
 
-  public afterEach(cb: BenchmarkCallback): BenchmarkSuiteBuilder {
+  public afterEach(cb: AfterEachCallback): BenchmarkSuiteBuilder {
     this._afterEachCallbacks.push(cb);
     return this;
   }
@@ -58,6 +74,8 @@ export class BenchmarkSuiteBuilder implements IBenchmarkSuiteBuilder {
     }
 
     return new BenchmarkSuite({
+      afterAllCallbacks: this._afterAllCallbacks,
+      beforeAllCallbacks: this._beforeAllCallbacks,
       beforeEachCallbacks: this._beforeEachCallbacks,
       afterEachCallbacks: this._afterEachCallbacks,
       cases: this._cases,
