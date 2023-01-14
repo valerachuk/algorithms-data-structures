@@ -1,3 +1,6 @@
+/**
+ * A node of a SkipList.
+ */
 class SkipListNode {
   private readonly _value: number;
   private readonly _forward: Array<SkipListNode | null>;
@@ -20,11 +23,17 @@ class SkipListNode {
   }
 }
 
+/**
+ * SkipList configuration.
+ */
 export type SkipListDef = {
   maxLvl: number;
   p: number;
 };
 
+/**
+ * Implementation of a skip list.
+ */
 export class SkipList {
   private readonly _def: SkipListDef;
   private readonly _header: SkipListNode;
@@ -43,11 +52,20 @@ export class SkipList {
     this._header = new SkipListNode(Number.NEGATIVE_INFINITY, this._def.maxLvl);
   }
 
+  /**
+   * Inserts the specified value if not exists.
+   * @param value The value to insert.
+   */
   public insert(value: number): void {
     const randomLevel = this._generateRandomLevel();
     this._insert(value, randomLevel);
   }
 
+  /**
+   * Deletes the specified value.
+   * @param value The value to delete.
+   * @returns `true` if found and deleted; otherwise, `false`.
+   */
   public delete(value: number): boolean {
     let current: SkipListNode | null = this._header;
     const update: Array<SkipListNode> = [];
@@ -86,6 +104,11 @@ export class SkipList {
     return true;
   }
 
+  /**
+   * Searches for the specified value.
+   * @param value the value to find.
+   * @returns `true` if found; otherwise, `false`.
+   */
   public has(value: number): boolean {
     let current: SkipListNode | null = this._header;
     for (let i = this._currentLevel; i >= 0; i--) {
@@ -103,6 +126,9 @@ export class SkipList {
     return current !== null && current.value === value;
   }
 
+  /**
+   * Removes all the elements from the skip list.
+   */
   public clear(): void {
     const { forward } = this._header;
 
@@ -111,6 +137,10 @@ export class SkipList {
     }
   }
 
+  /**
+   * Converts the skip list to array.
+   * @returns An array of the skip list's values.
+   */
   public toArray(): Array<number> {
     const arr: Array<number> = [];
 
@@ -124,6 +154,10 @@ export class SkipList {
     return arr;
   }
 
+  /**
+   * Clones the slip list.
+   * @returns A new instance of skip list.
+   */
   public clone(): SkipList {
     const clone = new SkipList(this._def);
 
@@ -137,6 +171,10 @@ export class SkipList {
     return clone;
   }
 
+  /**
+   * Returns the total number of elements in the skip list.
+   * @returns The total number of elements in the skip list.
+   */
   public size(): number {
     let current = this._header.forward[0];
 
@@ -149,6 +187,10 @@ export class SkipList {
     return count;
   }
 
+  /**
+   * Returns the total number of forward pointers in the skip list.
+   * @returns The total number of forward pointers in the skip list.
+   */
   public totalPointers(): number {
     let current = this._header.forward[0];
 
