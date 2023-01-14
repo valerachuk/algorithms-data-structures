@@ -1,3 +1,5 @@
+export type BeforeAllCallback = () => void;
+export type AfterAllCallback = () => void;
 export type BeforeEachCallback = () => void;
 export type AfterEachCallback = () => void;
 export type BenchmarkCallback = () => void;
