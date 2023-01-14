@@ -134,4 +134,25 @@ describe("Skip list", () => {
     // Assert
     expect(arr).toEqual(expectedArr);
   });
+
+  test("size()", () => {
+    // Arrange
+    const expectedSize = 100;
+
+    // Act
+    const size = testSkipList.size();
+
+    // Assert
+    expect(size).toEqual(expectedSize);
+  });
+
+  // test("totalPointers()", () => {
+  //   // Arrange
+
+  //   // Act
+  //   const totalPointers = testSkipList.totalPointers();
+
+  //   // Assert
+  //   console.log(totalPointers);
+  // });
 });

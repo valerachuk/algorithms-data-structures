@@ -137,6 +137,30 @@ export class SkipList {
     return clone;
   }
 
+  public size(): number {
+    let current = this._header.forward[0];
+
+    let count = 0;
+    while (current !== null) {
+      count++;
+      current = current.forward[0];
+    }
+
+    return count;
+  }
+
+  public totalPointers(): number {
+    let current = this._header.forward[0];
+
+    let count = 0;
+    while (current !== null) {
+      count += current.forward.length;
+      current = current.forward[0];
+    }
+
+    return count;
+  }
+
   private _insert(value: number, level: number) {
     let current: SkipListNode | null = this._header;
     const update: Array<SkipListNode> = [];
