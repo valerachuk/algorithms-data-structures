@@ -2,16 +2,19 @@ import { benchmark } from "../../src/benchmark";
 import { randomInt } from "../../src/common/utils";
 import { SkipList } from "../../src/skip-list";
 
+const NUMBER_OF_RUNS = 10_000;
 const SKIP_LIST_SIZE = 10_000;
 const SKIP_LIST_OPTIONS = {
-  maxLvl: 10,
-  p: 1 / 2,
+  maxLvl: 9,
+  p: 1 / Math.E,
 };
 
 benchmark(
-  `Skip list, size: ${SKIP_LIST_SIZE}, ${JSON.stringify(SKIP_LIST_OPTIONS)}`,
+  `Skip list, number of runs: ${NUMBER_OF_RUNS}, size: ${SKIP_LIST_SIZE}, ${JSON.stringify(
+    SKIP_LIST_OPTIONS
+  )}`,
   {
-    numberOfRuns: 1000,
+    numberOfRuns: NUMBER_OF_RUNS,
     omitBestAndWorstResult: false,
   },
   (suite) => {
